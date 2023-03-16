@@ -1,5 +1,6 @@
 
 from abc import ABC, abstractmethod
+from server import RPCServer
 from subs import Message, Subscriber
 from topic import Topic
 
@@ -44,7 +45,7 @@ class Broker(ABC):
     def has_any_messages(self, subscriber: Subscriber) -> bool:
         pass
 
-class LocalBroker(Broker):
+class BaseBroker(Broker):
     def __init__(self):
         self.topics: dict[str, Topic] = {}
 

@@ -1,5 +1,5 @@
 import unittest
-from broker import LocalBroker
+from broker import BaseBroker
 
 def make_orderer():
     order = {}
@@ -20,7 +20,7 @@ class TestBroker(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.broker = LocalBroker()
+        cls.broker = BaseBroker()
 
     @ordered
     def test_create_topic(self):
