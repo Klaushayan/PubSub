@@ -19,6 +19,7 @@ class BaseTopic(ABC):
     def get_messages(self, subscriber: Subscriber) -> list[Message]:
         pass
 
+# Local Topic
 class Topic(BaseTopic):
     def __init__(self, name: str):
         self.name: str = name
@@ -53,6 +54,9 @@ class Topic(BaseTopic):
             if subscriber.address == address:
                 return subscriber
         raise ValueError(f'No subscriber with address {address}')
+
+    def has_new_messages(self, subscriber: Subscriber):
+        return subscriber.last_message_id < self.next_message_id
 
     # this is to be used if a TTL functionality is implemented
     def reset_messages(self):
