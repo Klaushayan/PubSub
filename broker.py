@@ -43,7 +43,7 @@ class BaseBroker(ABC):
     @abstractmethod
     def has_any_messages(self, subscriber: Subscriber) -> bool:
         pass
-
+# basically, an in-memory broker
 class Broker(BaseBroker):
     def __init__(self):
         self.topics: dict[str, Topic] = {}

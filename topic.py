@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from subs import Message, Subscriber, SubscriberList
 
+# same concept as queues
 
 class BaseTopic(ABC):
     @abstractmethod
