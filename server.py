@@ -14,10 +14,10 @@ class Server(ABC):
 
 # As long as the listen method is not called, the server could be used as a client
 class RPCServer(Server):
-    def __init__(self, handler, address: tuple[str, int]):
+    def __init__(self, handler, address: tuple[str, int], client_address: tuple[str, int] = ('localhost', 8000)):
         self.handler = handler
         self.server = SimpleXMLRPCServer(address)
-        self.client = ServerProxy('http://localhost:8000') # Dummy client
+        self.set_client(client_address)
 
     def listen(self, address = None):
         if address is not None:
