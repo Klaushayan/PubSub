@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from threading import Timer
 from subs import Message, Subscriber
 from topic import Topic
 
