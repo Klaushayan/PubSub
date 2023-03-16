@@ -36,17 +36,6 @@ class Broker(ABC):
     def get_messages(self, topic_name: str, subscriber: Subscriber) -> list[Message]:
         pass
 
-    @staticmethod
-    def validate_topic_name(topic_name: str):
-        if not topic_name.isalnum():
-            raise ValueError(f'Topic name must be alphanumeric, got {topic_name}')
-
-    @staticmethod
-    def validate_subscriber_address(subscriber_address: str):
-        if not subscriber_address.startswith('http'):
-            raise ValueError(f'Subscriber address must start with http, got {subscriber_address}')
-
-
 class LocalBroker(Broker):
     def __init__(self):
         self.topics: dict[str, Topic] = {}
@@ -92,3 +81,13 @@ class LocalBroker(Broker):
     def get_messages(self, topic_name: str, subscriber: Subscriber) -> list[Message]:
         topic = self.get_topic(topic_name)
         return topic.get_messages(subscriber)
+
+    @staticmethod
+    def validate_topic_name(topic_name: str):
+        if not topic_name.isalnum():
+            raise ValueError(f'Topic name must be alphanumeric, got {topic_name}')
+
+    @staticmethod
+    def validate_subscriber_address(subscriber_address: str):
+        if not subscriber_address.startswith('http'):
+            raise ValueError(f'Subscriber address must start with http, got {subscriber_address}')
