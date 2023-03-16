@@ -2,7 +2,11 @@
 from __future__ import annotations
 from dataclasses import dataclass
 
-
+@dataclass
+class Message:
+    id: int
+    topic: str
+    data: str
 @dataclass
 class Subscriber:
     id: int
