@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from threading import Timer
 from subs import Message, Subscriber
 from topic import Topic
 
@@ -7,19 +8,6 @@ class BaseBroker(ABC):
     @abstractmethod
     def create_topic(self, topic_name: str) -> Topic:
         pass
-
-    @abstractmethod
-    def get_topic(self, topic_name: str) -> Topic:
-        pass
-
-    @abstractmethod
-    def get_topic_names(self) -> tuple[str]:
-        pass
-
-    @abstractmethod
-    def topic_exists(self, topic_name: str) -> bool:
-        pass
-
     @abstractmethod
     def subscribe(self, topic_name: str, subscriber_address: str) -> Subscriber:
         pass
@@ -30,18 +18,6 @@ class BaseBroker(ABC):
 
     @abstractmethod
     def publish(self, topic_name: str, message: Message | str):
-        pass
-
-    @abstractmethod
-    def get_messages(self, topic_name: str, subscriber: Subscriber) -> list[Message]:
-        pass
-
-    @abstractmethod
-    def has_messages(self, topic_name: str, subscriber: Subscriber) -> bool:
-        pass
-
-    @abstractmethod
-    def has_any_messages(self, subscriber: Subscriber) -> bool:
         pass
 
 
@@ -76,7 +52,8 @@ class Broker(BaseBroker):
             topic = self.get_topic(topic_name)
             return topic.add_subscriber(subscriber_address)
         except KeyError:
-            raise ValueError(f"Topic {topic_name} does not exist")
+            topic = self.create_topic(topic_name)
+            return topic.add_subscriber(subscriber_address)
         except ValueError as e:
             raise ValueError(f"Invalid subscriber address: {e}")
 
