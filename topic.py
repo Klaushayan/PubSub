@@ -19,7 +19,6 @@ class BaseTopic(ABC):
     def get_messages(self, subscriber: Subscriber) -> list[Message]:
         pass
 
-# Local Topic
 class Topic(BaseTopic):
     def __init__(self, name: str):
         self.name: str = name
