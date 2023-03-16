@@ -1,7 +1,7 @@
-
 from abc import ABC, abstractmethod
 from subs import Message, Subscriber
 from topic import Topic
+
 
 class BaseBroker(ABC):
     @abstractmethod
@@ -43,6 +43,8 @@ class BaseBroker(ABC):
     @abstractmethod
     def has_any_messages(self, subscriber: Subscriber) -> bool:
         pass
+
+
 # basically, an in-memory broker
 class Broker(BaseBroker):
     def __init__(self):
@@ -52,12 +54,12 @@ class Broker(BaseBroker):
         try:
             self.validate_topic_name(topic_name)
             if self.topic_exists(topic_name):
-                raise ValueError(f'Topic {topic_name} already exists')
+                raise ValueError(f"Topic {topic_name} already exists")
             topic = Topic(topic_name)
             self.topics[topic_name] = topic
             return topic
         except ValueError as e:
-            raise ValueError(f'Invalid topic name: {e}')
+            raise ValueError(f"Invalid topic name: {e}")
 
     def get_topic(self, topic_name: str) -> Topic:
         return self.topics[topic_name]
@@ -74,9 +76,9 @@ class Broker(BaseBroker):
             topic = self.get_topic(topic_name)
             return topic.add_subscriber(subscriber_address)
         except KeyError:
-            raise ValueError(f'Topic {topic_name} does not exist')
+            raise ValueError(f"Topic {topic_name} does not exist")
         except ValueError as e:
-            raise ValueError(f'Invalid subscriber address: {e}')
+            raise ValueError(f"Invalid subscriber address: {e}")
 
     def unsubscribe(self, topic_name: str, subscriber: int | Subscriber):
         topic = self.get_topic(topic_name)
@@ -103,9 +105,11 @@ class Broker(BaseBroker):
     @staticmethod
     def validate_topic_name(topic_name: str):
         if not topic_name.isalnum():
-            raise ValueError(f'Topic name must be alphanumeric, got {topic_name}')
+            raise ValueError(f"Topic name must be alphanumeric, got {topic_name}")
 
     @staticmethod
     def validate_subscriber_address(subscriber_address: str):
-        if not subscriber_address.startswith('http'):
-            raise ValueError(f'Subscriber address must start with http, got {subscriber_address}')
+        if not subscriber_address.startswith("http"):
+            raise ValueError(
+                f"Subscriber address must start with http, got {subscriber_address}"
+            )
