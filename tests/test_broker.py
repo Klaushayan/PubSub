@@ -1,4 +1,3 @@
-from filecmp import cmp
 import unittest
 from broker import LocalBroker
 
