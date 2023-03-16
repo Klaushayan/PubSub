@@ -36,3 +36,8 @@ class RPCServer(Server):
 
     def set_client(self, address: tuple[str, int]):
         self.client = ServerProxy(f'http://{address[0]}:{address[1]}')
+
+    @staticmethod
+    def call_by_address(address: tuple[str, int], method, *args):
+        client = ServerProxy(f'http://{address[0]}:{address[1]}')
+        return getattr(client, method)(*args)
