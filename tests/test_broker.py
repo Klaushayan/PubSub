@@ -16,6 +16,13 @@ def make_orderer():
 ordered, compare = make_orderer()
 unittest.defaultTestLoader.sortTestMethodsUsing = compare
 
+"""
+        The reason behind client address is that initially
+        this was going to be an HTTP broker with two options,
+        either long polling or an endpoint on the client that
+        would be called when a message is published to the topic.
+"""
+
 class TestBroker(unittest.TestCase):
 
     @classmethod
