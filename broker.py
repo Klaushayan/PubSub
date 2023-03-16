@@ -36,6 +36,14 @@ class Broker(ABC):
     def get_messages(self, topic_name: str, subscriber: Subscriber) -> list[Message]:
         pass
 
+    @abstractmethod
+    def has_messages(self, topic_name: str, subscriber: Subscriber) -> bool:
+        pass
+
+    @abstractmethod
+    def has_any_messages(self, subscriber: Subscriber) -> bool:
+        pass
+
 class LocalBroker(Broker):
     def __init__(self):
         self.topics: dict[str, Topic] = {}
@@ -81,6 +89,16 @@ class LocalBroker(Broker):
     def get_messages(self, topic_name: str, subscriber: Subscriber) -> list[Message]:
         topic = self.get_topic(topic_name)
         return topic.get_messages(subscriber)
+
+    def has_messages(self, topic_name: str, subscriber: Subscriber) -> bool:
+        topic = self.get_topic(topic_name)
+        return topic.has_new_messages(subscriber)
+
+    def has_any_messages(self, subscriber: Subscriber) -> bool:
+        for topic_name in self.get_topic_names():
+            if self.has_messages(topic_name, subscriber):
+                return True
+        return False
 
     @staticmethod
     def validate_topic_name(topic_name: str):
