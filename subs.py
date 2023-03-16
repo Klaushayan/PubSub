@@ -1,17 +1,20 @@
-
 from __future__ import annotations
 from dataclasses import dataclass
+
 
 @dataclass
 class Message:
     id: int
     topic: str
     data: str
+
+
 @dataclass
 class Subscriber:
     id: int
     address: str
     last_message_id: int = 0
+
 
 class SubscriberList:
     def __init__(self):

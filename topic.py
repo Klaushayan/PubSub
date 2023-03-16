@@ -3,6 +3,7 @@ from subs import Message, Subscriber, SubscriberList
 
 # same concept as queues
 
+
 class BaseTopic(ABC):
     @abstractmethod
     def add_subscriber(self, subscriber_address: str) -> Subscriber:
@@ -19,6 +20,7 @@ class BaseTopic(ABC):
     @abstractmethod
     def get_messages(self, subscriber: Subscriber) -> list[Message]:
         pass
+
 
 class Topic(BaseTopic):
     def __init__(self, name: str):
@@ -42,9 +44,11 @@ class Topic(BaseTopic):
         return message
 
     def get_messages(self, subscriber: Subscriber):
-        messages = self.messages[subscriber.last_message_id:]
-        subscriber.last_message_id = self.next_message_id
+        messages = self.messages[subscriber.last_message_id :]
         return messages
+
+    def update_subscriber(self, subscriber: Subscriber, last_message_id: int):
+        subscriber.last_message_id = last_message_id
 
     def get_subscriber(self, subscriber_id: int) -> Subscriber:
         return self.subscribers[subscriber_id]
@@ -53,7 +57,7 @@ class Topic(BaseTopic):
         for subscriber in self.subscribers:
             if subscriber.address == address:
                 return subscriber
-        raise ValueError(f'No subscriber with address {address}')
+        raise ValueError(f"No subscriber with address {address}")
 
     def has_new_messages(self, subscriber: Subscriber):
         return subscriber.last_message_id < self.next_message_id
