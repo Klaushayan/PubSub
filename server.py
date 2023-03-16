@@ -12,6 +12,7 @@ class Server(ABC):
     def close(self):
         pass
 
+# As long as the listen method is not called, the server could be used as a client
 class RPCServer(Server):
     def __init__(self, handler, address: tuple[str, int]):
         self.handler = handler
