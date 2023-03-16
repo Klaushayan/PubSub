@@ -1,6 +1,6 @@
 from filecmp import cmp
 import unittest
-from broker import Broker
+from broker import LocalBroker
 
 def make_orderer():
     order = {}
@@ -21,7 +21,7 @@ class TestBroker(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.broker = Broker()
+        cls.broker = LocalBroker()
 
     @ordered
     def test_create_topic(self):
