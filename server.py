@@ -2,9 +2,17 @@ from abc import ABC, abstractmethod
 
 class Server(ABC):
     @abstractmethod
-    def send(self, message: dict, client_id: str) -> bool:
+    def connect(self):
         pass
 
     @abstractmethod
-    def recv(self) -> dict:
+    def disconnect(self):
+        pass
+
+    @abstractmethod
+    def send(self, data):
+        pass
+
+    @abstractmethod
+    def receive(self):
         pass

@@ -1,7 +1,5 @@
 
-from dataclasses import dataclass
-
-from subs import Message, Subscriber, SubscriberList
+from subs import Message, Subscriber
 from topic import Topic
 
 class Broker:
