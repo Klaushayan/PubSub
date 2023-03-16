@@ -3,8 +3,6 @@ import threading
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.client import ServerProxy
 
-from broker import Broker
-
 class Server(ABC):
     @abstractmethod
     def listen(self, address):
