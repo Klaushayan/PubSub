@@ -1,8 +1,25 @@
-from dataclasses import dataclass
+from abc import ABC, abstractmethod
 from subs import Message, Subscriber, SubscriberList
 
 
-class Topic(object):
+class BaseTopic(ABC):
+    @abstractmethod
+    def add_subscriber(self, subscriber_address: str) -> Subscriber:
+        pass
+
+    @abstractmethod
+    def remove_subscriber(self, subscriber: int | Subscriber):
+        pass
+
+    @abstractmethod
+    def add_message(self, message: Message | str):
+        pass
+
+    @abstractmethod
+    def get_messages(self, subscriber: Subscriber) -> list[Message]:
+        pass
+
+class Topic(BaseTopic):
     def __init__(self, name: str):
         self.name: str = name
         self.subscribers: SubscriberList = SubscriberList()
