@@ -18,7 +18,7 @@ class RPCServer(Server):
     def __init__(self, broker: Broker, address: tuple[str, int]):
         self.broker = broker
         self.server = SimpleXMLRPCServer(address)
-        self.client = ServerProxy('http://localhost:8000')
+        self.client = ServerProxy('http://localhost:8000') # Dummy client
 
     def listen(self, address = None):
         if address is not None:
@@ -34,3 +34,6 @@ class RPCServer(Server):
 
     def call(self, method, *args):
         return getattr(self.client, method)(*args)
+
+    def set_client(self, address: tuple[str, int]):
+        self.client = ServerProxy(f'http://{address[0]}:{address[1]}')
