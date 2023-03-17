@@ -37,11 +37,15 @@ class Topic(BaseTopic):
     def remove_subscriber(self, subscriber: int | Subscriber):
         return self.subscribers.remove(subscriber)
 
+    # This code adds a message to a list of messages. If the message is a string,
+    # it is first converted to a Message object. The message is then added to the
+    # list of messages.
     def add_message(self, message: Message | str):
         if isinstance(message, str):
             message = Message(self._get_next_message_id(), self.name, message)
+        if not isinstance(message, Message):
+            raise TypeError("Message must be a string or a Message object")
         self.messages.append(message)
-        return message
 
     def get_messages(self, subscriber: Subscriber):
         messages = self.messages[subscriber.last_message_id :]

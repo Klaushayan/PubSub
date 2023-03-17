@@ -29,12 +29,17 @@ class RPCServer(Server):
         self.server = SimpleXMLRPCServer(address)
         self.set_client(client_address)
 
-    def listen(self, address=None):
+    def listen(self, address=None, timeout=None):
+        # Create a server instance and register an instance of our handler class
         if address is not None:
             self.server = SimpleXMLRPCServer(address)
         self.server.register_instance(self.handler)
+        # Start a thread to listen for requests
         self.server_thread = threading.Thread(target=self.server.serve_forever)
         self.server_thread.start()
+        # If a timeout is specified, wait for the thread to terminate
+        if timeout is not None:
+            self.server_thread.join(timeout)
 
     def close(self):
         self.server.shutdown()
@@ -42,7 +47,10 @@ class RPCServer(Server):
         self.server_thread.join()
 
     def call(self, method, *args):
-        return getattr(self.client, method)(*args)
+        try:
+            return getattr(self.client, method)(*args)
+        except ConnectionRefusedError:
+            raise ConnectionError("No connection to the client")
 
     def set_client(self, address: tuple[str, int]):
         self.client = ServerProxy(f"http://{address[0]}:{address[1]}")
@@ -50,4 +58,7 @@ class RPCServer(Server):
     @staticmethod
     def call_by_address(address: tuple[str, int], method, *args):
         client = ServerProxy(f"http://{address[0]}:{address[1]}")
-        return getattr(client, method)(*args)
+        try:
+            return getattr(client, method)(*args)
+        except ConnectionRefusedError:
+            raise ConnectionError("No connection to the server")

@@ -30,17 +30,38 @@ class Broker(BaseBroker):
         self.topics: dict[str, Topic] = {}
 
     def create_topic(self, topic_name: str) -> Topic:
+        """Creates a new topic.
+
+        If the topic already exists, raises a ValueError.
+        If the topic name is invalid, raises a ValueError.
+        If an unexpected error occurs, raises an Exception.
+
+        Args:
+            topic_name: The name of the topic to create.
+
+        Returns:
+            The newly created Topic.
+        """
         try:
             self.validate_topic_name(topic_name)
             if self.topic_exists(topic_name):
                 raise ValueError(f"Topic {topic_name} already exists")
-            topic = Topic(topic_name)
-            self.topics[topic_name] = topic
-            return topic
+            return self._create_topic(topic_name)
         except ValueError as e:
             raise ValueError(f"Invalid topic name: {e}")
+        except Exception as e:
+            raise Exception(f"Could not create topic {topic_name}: {e}")
+
+    def _create_topic(self, topic_name: str) -> Topic:
+        topic = Topic(topic_name)
+        self.topics[topic_name] = topic
+        return topic
 
     def get_topic(self, topic_name: str) -> Topic:
+        """
+        Returns the topic with the given topic_name.
+        If the topic does not exist, it will raise a KeyError.
+        """
         return self.topics[topic_name]
 
     def get_topic_names(self) -> tuple[str]:
@@ -50,22 +71,39 @@ class Broker(BaseBroker):
         return topic_name in self.topics
 
     def subscribe(self, topic_name: str, subscriber_address: str) -> Subscriber:
+        """ Adds a subscriber to a topic.
+
+        Args:
+            topic_name: The name of the topic.
+            subscriber_address: The address of the new subscriber.
+
+        Returns:
+            The new subscriber.
+
+        Raises:
+            KeyError: The topic does not exist.
+            ValueError: The subscriber address is invalid.
+        """
         try:
             self.validate_subscriber_address(subscriber_address)
             topic = self.get_topic(topic_name)
-            return topic.add_subscriber(subscriber_address)
         except KeyError:
             topic = self.create_topic(topic_name)
-            return topic.add_subscriber(subscriber_address)
         except ValueError as e:
             raise ValueError(f"Invalid subscriber address: {e}")
+        return topic.add_subscriber(subscriber_address)
 
     def unsubscribe(self, topic_name: str, subscriber: int | Subscriber):
+        """
+        Unsubscribe a subscriber from a topic
+        """
         topic = self.get_topic(topic_name)
         topic.remove_subscriber(subscriber)
 
     def publish(self, topic_name: str, message: Message | str):
+        # Get the topic that the message will be published to.
         topic = self.get_topic(topic_name)
+        # Add the message to the topic.
         return topic.add_message(message)
 
     def get_messages(self, topic_name: str, subscriber: Subscriber) -> list[Message]:
