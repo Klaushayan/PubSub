@@ -46,6 +46,7 @@ class Topic(BaseTopic):
         if not isinstance(message, Message):
             raise TypeError("Message must be a string or a Message object")
         self.messages.append(message)
+        return message
 
     def get_messages(self, subscriber: Subscriber):
         messages = self.messages[subscriber.last_message_id :]
