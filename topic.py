@@ -52,8 +52,11 @@ class Topic(BaseTopic):
         messages = self.messages[subscriber.last_message_id :]
         return messages
 
-    def update_subscriber(self, subscriber: Subscriber, last_message_id: int):
-        subscriber.last_message_id = last_message_id
+    def update_subscriber(self, subscriber: Subscriber, last_message_id: int = 0):
+        if last_message_id == 0:
+            subscriber.last_message_id = self.next_message_id
+        else:
+            subscriber.last_message_id = last_message_id
 
     def get_subscriber(self, subscriber_id: int) -> Subscriber:
         return self.subscribers[subscriber_id]

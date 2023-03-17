@@ -106,9 +106,27 @@ class Broker(BaseBroker):
         # Add the message to the topic.
         return topic.add_message(message)
 
-    def get_messages(self, topic_name: str, subscriber: Subscriber) -> list[Message]:
+    def get_messages(self, topic_name: str, subscriber: Subscriber, update: bool = False) -> list[Message]:
+        """Get all messages in a topic that are not yet read by a subscriber.
+        The update parameter determines whether the subscriber's last read message ID will be updated.
+        You could later manually update the subscriber's last read message ID by calling topic.update_subscriber(subscriber, message_id).
+        Upon confirmation that the subscriber has recieved the messages.
+
+        Note: You could access a topic's object directly by calling broker.get_topic(topic_name).
+
+        Args:
+            topic_name: The name of the topic.
+            subscriber: The subscriber.
+            update: Whether to update the subscriber's last read message ID.
+
+        Returns:
+            A list of messages.
+        """
         topic = self.get_topic(topic_name)
-        return topic.get_messages(subscriber)
+        messages = topic.get_messages(subscriber)
+        if update and messages:
+            topic.update_subscriber(subscriber, messages[-1].id)
+        return messages
 
     def has_messages(self, topic_name: str, subscriber: Subscriber) -> bool:
         topic = self.get_topic(topic_name)
