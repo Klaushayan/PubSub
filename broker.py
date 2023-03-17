@@ -19,6 +19,10 @@ class BaseBroker(ABC):
     def publish(self, topic_name: str, message: Message | str):
         pass
 
+    @abstractmethod
+    def get_messages(self, topic_name: str, subscriber: Subscriber):
+        pass
+
 
 # basically, an in-memory broker
 class Broker(BaseBroker):

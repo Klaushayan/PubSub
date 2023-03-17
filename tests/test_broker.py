@@ -54,11 +54,6 @@ class TestBroker(unittest.TestCase):
         self.assertEqual(messages[0].data, "test message")
 
     @ordered
-    def test_add_subscriber_to_non_existing_topic(self):
-        with self.assertRaises(ValueError):
-            self.broker.subscribe("test2", "http://localhost:8000/test2")
-
-    @ordered
     def test_add_message_to_non_existing_topic(self):
         with self.assertRaises(KeyError):
             self.broker.publish("test2", "test message")

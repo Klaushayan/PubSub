@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
-
+from typing import Callable
 
 @dataclass
 class Message:
@@ -14,6 +14,10 @@ class Subscriber:
     id: int
     address: str
     last_message_id: int = 0
+    notify: Callable[[Message], None] = lambda message: None
+
+    def register(self, notify: Callable[[Message], None]) -> None:
+        self.notify = notify
 
 
 class SubscriberList:

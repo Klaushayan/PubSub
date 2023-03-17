@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 import threading
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.client import ServerProxy
+from broker import BaseBroker
+
+from subs import Message
 
 
 class Server(ABC):
