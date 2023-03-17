@@ -48,10 +48,13 @@ class TestBroker(unittest.TestCase):
 
     @ordered
     def test_get_messages(self):
-        subscriber = self.broker.get_topic("test").subscribers[0]
+        topic = self.broker.get_topic("test")
+        subscriber = topic.subscribers[0]
         messages = self.broker.get_messages("test", subscriber)
         self.assertEqual(len(messages), 1)
         self.assertEqual(messages[0].data, "test message")
+        # We assume the subscriber has recieved the message
+        topic.update_subscriber(subscriber)
 
     @ordered
     def test_add_message_to_non_existing_topic(self):
